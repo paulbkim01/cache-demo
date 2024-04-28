@@ -1,17 +1,6 @@
 import { LowSync } from 'lowdb'
 import { JSONFileSync } from 'lowdb/node'
-
-export type Employee = {
-	id: number
-	name: string
-	age: number
-	teamId?: number
-}
-
-export type Team = {
-	id: number
-	name: string
-}
+import type { Employee, Team } from './types'
 
 export const db = new LowSync(
 	new JSONFileSync<{
@@ -22,31 +11,92 @@ export const db = new LowSync(
 		employees: [
 			{
 				id: 1,
-				name: 'Alice',
-				age: 25,
+				name: 'Kage',
+				photo: 'https://randomuser.me/api/portraits/men/93.jpg',
+				role: 'manager',
 				teamId: 1,
 			},
 			{
 				id: 2,
-				name: 'Bob',
-				age: 30,
+				name: 'Odile',
+				photo: 'https://randomuser.me/api/portraits/women/11.jpg',
+				role: 'backend',
 				teamId: 1,
 			},
 			{
 				id: 3,
-				name: 'Charlie',
-				age: 35,
+				name: 'Doncic',
+				photo: 'https://randomuser.me/api/portraits/men/13.jpg',
+				role: 'backend',
+				teamId: 1,
+			},
+			{
+				id: 4,
+				name: 'Ocean',
+				photo: 'https://randomuser.me/api/portraits/men/84.jpg',
+				role: 'backend',
+				teamId: 1,
+			},
+			{
+				id: 5,
+				name: 'Audrey',
+				photo: 'https://randomuser.me/api/portraits/women/37.jpg',
+				role: 'backend',
+				teamId: 1,
+			},
+			{
+				id: 6,
+				name: 'Rita',
+				photo: 'https://randomuser.me/api/portraits/women/75.jpg',
+				role: 'backend',
+				teamId: 1,
+			},
+			{
+				id: 7,
+				name: 'Hailey',
+				photo: 'https://randomuser.me/api/portraits/women/55.jpg',
+				teamId: 1,
+				role: 'frontend',
+			},
+			{
+				id: 8,
+				name: 'Mia',
+				photo: 'https://randomuser.me/api/portraits/women/84.jpg',
+				teamId: 1,
+				role: 'frontend',
+			},
+			{
+				id: 9,
+				name: 'Ben',
+				photo: 'https://randomuser.me/api/portraits/men/58.jpg',
 				teamId: 2,
+				role: 'manager',
+			},
+			{
+				id: 10,
+				name: 'Jarry',
+				photo: 'https://randomuser.me/api/portraits/men/53.jpg',
+				teamId: 2,
+				role: 'backend',
+			},
+			{
+				id: 11,
+				name: 'Lucy',
+				photo: 'https://randomuser.me/api/portraits/women/90.jpg',
+				teamId: 2,
+				role: 'backend',
 			},
 		],
 		teams: [
 			{
 				id: 1,
-				name: 'Engineering',
+				name: 'Content',
+				lead: 'Kage',
 			},
 			{
 				id: 2,
-				name: 'Sales',
+				name: 'Platform',
+				lead: 'Ben',
 			},
 		],
 	}

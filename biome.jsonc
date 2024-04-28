@@ -1,0 +1,41 @@
+{
+	"$schema": "https://biomejs.dev/schemas/1.7.1/schema.json", // 하하 이것은 코멘트다 에러가 나지않는다
+	"files": {
+		"include": [
+			"src/**/*.js",
+			"src/**/*.ts",
+			"src/**/*.tsx",
+			"src/**/*.jsx",
+			"**/*.json",
+			"**/*.jsonc"
+		],
+		"ignoreUnknown": true
+	},
+	"organizeImports": {
+		"enabled": true
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true
+		}
+	},
+	"formatter": {
+		"enabled": true,
+		"lineEnding": "cr"
+	},
+	"javascript": {
+		"globals": ["$", "_", "externalVariable"],
+		"formatter": {
+			"quoteStyle": "single",
+			"quoteProperties": "preserve",
+			"trailingComma": "es5",
+			"semicolons": "asNeeded"
+		}
+	},
+	"json": {
+		"parser": {
+			"allowComments": true
+		}
+	}
+}

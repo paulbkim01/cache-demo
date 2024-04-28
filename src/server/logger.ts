@@ -1,0 +1,1 @@
+import { initLogger } from '@titicaca/ntk-logger'export const logger = initLogger('development', {	level: 'debug',})

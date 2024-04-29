@@ -3,6 +3,7 @@ import type { EmployeeView } from '../server/types'
 
 const employeeQueryMap = {
 	default: '',
+	search: '',
 	all: '?type=all',
 	managers: '?type=manager',
 	none: '?type=none',
@@ -11,11 +12,13 @@ const employeeQueryMap = {
 export function EmployeePanel() {
 	const [employees, setEmployees] = useState<EmployeeView[]>([])
 	const [selectedTab, setSelectedTab] = useState<keyof typeof employeeQueryMap>('default')
+	const [searchName, setSearchName] = useState('')
 
 	useEffect(() => {
-		if (selectedTab === 'default') {
+		if (selectedTab === 'default' || selectedTab === 'search') {
 			return
 		}
+
 		const fetchEmployees = async () => {
 			const resp = await fetch(`http://localhost:5555/employees${employeeQueryMap[selectedTab]}`)
 			if (!resp.ok) {
@@ -34,9 +37,63 @@ export function EmployeePanel() {
 	}
 
 	return (
-		<div>
-			<h1 className='text-xl font-semibold flex justify-center p-4'>직원 목록</h1>
+		<div className='min-w-[740px]'>
+			<h1 className='text-xl font-semibold flex justify-center p-4'>목록</h1>
 			<div role='tablist' className='tabs tabs-bordered'>
+				<button
+					name='search'
+					role='tab'
+					className={`tab hover:text-green-800 ${selectedTab === 'search' ? 'tab-active' : ''}`}
+					type='button'
+					// @ts-ignore
+					onClick={(e) => document.getElementById('employee-search')?.showModal()}
+				>
+					직원 검색
+				</button>
+				<dialog id='employee-search' className='modal modal-bottom sm:modal-middle'>
+					<div className='modal-box'>
+						<label className='input flex items-center gap-2'>
+							<input
+								type='text'
+								className='grow border-0'
+								placeholder='이름으로 검색'
+								onChange={(e) => setSearchName(e.target.value)}
+							/>
+							<button
+								className='btn btn-primary'
+								type='button'
+								onClick={async () => {
+									const resp = await fetch(`http://localhost:5555/employees?name=${searchName}`)
+									if (!resp.ok) {
+										console.error('Failed to fetch employees', resp.status, resp.statusText)
+										alert('직원 검색에 실패했습니다.')
+										return
+									}
+
+									const data = await resp.json()
+									if (data.length === 0) {
+										alert('검색 결과가 없습니다.')
+									}
+
+									setEmployees(data)
+									setSelectedTab('search')
+									// @ts-ignore
+									document.getElementById('employee-search')?.close()
+								}}
+							>
+								검색
+							</button>
+						</label>
+
+						<div className='modal-action'>
+							<form method='dialog'>
+								<button className='btn' type='submit'>
+									닫기
+								</button>
+							</form>
+						</div>
+					</div>
+				</dialog>
 				<button
 					name='all'
 					role='tab'
@@ -103,7 +160,7 @@ type EmployeeRowProps = {
 
 function EmployeeRow({ employee }: EmployeeRowProps) {
 	return (
-		<tr>
+		<tr className='text-center'>
 			<td>
 				<span className='text-sm text-opacity-50'>{employee.id}</span>
 			</td>
@@ -116,7 +173,8 @@ function EmployeeRow({ employee }: EmployeeRowProps) {
 					</div>
 					<div>
 						<div className='font-bold'>{employee.name}</div>
-						<div className='text-sm opacity-50'>{employee.teamName ?? '무소속'}</div>
+
+						<div className='text-sm text-opacity-50'>{employee.teamName ?? '무소속'}</div>
 					</div>
 				</div>
 			</td>

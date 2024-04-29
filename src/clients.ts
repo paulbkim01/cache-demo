@@ -1,4 +1,4 @@
-import type { Employee } from './server/db'
+import type { Employee } from './server/types'
 
 const BASE_URL = 'http://localhost:5555'
 

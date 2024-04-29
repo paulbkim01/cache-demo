@@ -1,4 +1,3 @@
-version: '3.9'
 services:
   redis:
     container_name: redis_for_cache
@@ -7,3 +6,6 @@ services:
       - '6379:6379'
     volumes:
       - redis_data:/data
+
+volumes:
+  redis_data:

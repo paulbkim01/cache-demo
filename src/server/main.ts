@@ -1,7 +1,12 @@
+import 'reflect-metadata'
+
+import { cacheClient } from './cache.js'
 import { logger } from './logger.js'
 import { createServer } from './server.js'
 
 async function main() {
+	await cacheClient()
+
 	const app = createServer()
 	const server = app.listen(5555, () => {
 		logger.info('Server listening on port 5555')

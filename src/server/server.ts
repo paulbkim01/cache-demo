@@ -4,6 +4,7 @@ import Router from '@koa/router'
 import cors from '@koa/cors'
 import { catchAppErrorsMiddleware } from '@titicaca/ntk-koa-helpers'
 import Koa from 'koa'
+import { cacheClient } from './cache.js'
 import { db } from './db.js'
 import { logger } from './logger.js'
 import type { Employee, EmployeeView, Team } from './types.js'
@@ -106,10 +107,37 @@ function routes() {
 			})
 		})
 		.get('/cache', async (ctx) => {
-			ctx.body = []
+			const client = await cacheClient()
+
+			try {
+				const keys = await client.store.keys()
+				if (!keys || keys.length === 0) {
+					return {}
+				}
+
+				const values = await client.store.mget(...keys)
+
+				const ret = keys.reduce<Record<string, unknown>>((acc, key, idx) => {
+					const value = values[idx]
+					acc[key] = value
+					return acc
+				}, {})
+
+				ctx.body = ret
+			} catch (error) {
+				logger.error(error, 'Failed to get cache keys')
+				ctx.status = 500
+				return
+			}
 		})
 		.delete('/cache', async (ctx) => {
-			ctx.body = []
+			try {
+				const client = await cacheClient()
+				await client.store.reset()
+				ctx.status = 204
+			} catch (error) {
+				logger.error(error, 'Failed to reset cache')
+			}
 		})
 
 	return router.routes()
